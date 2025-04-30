@@ -22,10 +22,11 @@ if "authenticated" not in st.session_state:
 if not st.session_state["authenticated"]:
     login()
 else:
+        
     # --- Revenue Prediction App ---
     st.title("Revenue Prediction App")
     st.header("Enter Feature Values")
-
+        
     # Input fields for each feature
     land_class = st.selectbox("Land Class", ["Federal", "Native American"])
     land_category = st.selectbox("Land Category", ["Onshore", "Offshore", "Not Tied to a Lease"])
@@ -48,11 +49,15 @@ else:
         "Product": product
     }])
 
-    # Load the pre-trained model
-    model = pickle.load(open("Model.pkl", "rb"))
+    # Load the model and encoder
+    with open("linear_regression_model_bundle.pkl", "rb") as f:
+        bundle = pickle.load(f)
+        model = bundle["Model"]
+        selected_features = bundle["cat_features"]
 
     # Predict and display result
     if st.button("Predict Revenue"):
+        input_data = cat_features
         prediction = model.predict(input_data)
         st.success(f"Estimated Revenue: ${prediction[0]:,.2f}")
 
