@@ -1,211 +1,82 @@
-#!/usr/bin/env python
-# coding: utf-8
 
-# In[1]:
-
-
-import pyodbc
-
+import streamlit as st
 import numpy as np
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder,StandardScaler
-from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, mean_squared_error, r2_score
-from sklearn.linear_model import LinearRegression
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder
-# Moudles related to feature selection
-from sklearn.feature_selection import RFE, SelectKBest , f_regression
-
-
-# In[2]:
-
-
-df = pd.read_csv(r"C:\Users\ADMIN\OneDrive\Desktop\Internship\Project 5 (Oil and Gas Industry )\Streamlit Files\Data\Natural_Resources_Revenue.csv")
-
-
-# In[5]:
-
-
-df.isnull().sum()
-
-
-# In[4]:
-
-
-df.head()
-
-
-# In[5]:
-
-
-df = df[df['Product'].notna()]
-
-
-# In[6]:
-
-
-df.info()
-
-
-# In[7]:
-
-
-df.shape
-
-
-# In[8]:
-
-
-df.isnull().sum()
-
-
-# In[9]:
-
-
-df = df.drop(columns=['Offshore Region','Calendar Year','FIPS Code'])
-
-
-# In[10]:
-
-
-df.head()
-
-
-# In[11]:
-
-
-df.head()
-
-
-# In[13]:
-
-
-df.info()
-
-
-# In[14]:
-
-
-df = df.apply(lambda col: col.fillna(col.mode()[0]) if col.dtype == 'object' else col.fillna(col.median()))
-
-
-# In[15]:
-
-
-df.info()
-
-
-# In[16]:
-
-
-X=df[df.columns.difference(['Revenue'])]
-y=df.Revenue
-
-
-# In[17]:
-
-
-X_train, X_val, y_train, y_val=train_test_split(X, y, test_size=0.3, random_state=37)
-
-
-# In[18]:
-
-
-df.head()
-
-
-# In[35]:
-
-
-from catboost import CatBoostRegressor
-
-# Define categorical feature columns
-cat_features = ['Land Class', 'Land Category', 'State', 'Revenue Type', 'Mineral Lease Type', 'Commodity','County','Product']
-
-# Initialize CatBoostRegressor
-model = CatBoostRegressor(iterations=100, loss_function='RMSE', random_state=42, verbose=0)
-
-# Fit the model
-model.fit(X_train, y_train, cat_features=cat_features)
-
-# Predict
-y_pred = model.predict(X_val)
-
-# Evaluate
-print("MAE:", mean_absolute_error(y_val, y_pred))
-print("MAPE:", mean_absolute_percentage_error(y_val, y_pred))
-print("RMSE:", mean_squared_error(y_val, y_pred, squared=False))
-print("R2 Score:", r2_score(y_val, y_pred))
-
-
-# In[378]:
-
-
-df.info()
-
-
-# In[37]:
-
-
-from catboost import CatBoostRegressor
-from sklearn.model_selection import RandomizedSearchCV
-from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, mean_squared_error, r2_score
-
-# Define categorical feature columns
-cat_features = ['Land Class', 'Land Category', 'State', 'Revenue Type', 'Mineral Lease Type', 'Commodity', 'County', 'Product']
-
-# Initialize the base model
-model = CatBoostRegressor(loss_function='RMSE', random_state=42, verbose=0)
-
-# Define hyperparameter space
-param_dist = {
-    'iterations': [100, 200, 300, 500],
-    'learning_rate': [0.01, 0.05, 0.1, 0.2],
-    'depth': [4, 6, 8, 10],
-    'l2_leaf_reg': [1, 3, 5, 7, 9],
-    'bagging_temperature': [0, 1, 2, 5],
-    'border_count': [32, 64, 128]
-}
-
-# Set up RandomizedSearchCV
-random_search = RandomizedSearchCV(
-    estimator=model,
-    param_distributions=param_dist,
-    n_iter=20,   # number of different combinations to try
-    cv=3,        # 3-fold cross-validation
-    verbose=1,
-    random_state=42,
-    n_jobs=-1    # use all available cores
-)
-
-# Fit RandomizedSearchCV
-random_search.fit(X_train, y_train, cat_features=cat_features)
-
-# Best model
-best_model = random_search.best_estimator_
-
-# Predict
-y_pred = best_model.predict(X_val)
-
-# Evaluate
-print("MAE:", mean_absolute_error(y_val, y_pred))
-print("MAPE:", mean_absolute_percentage_error(y_val, y_pred))
-print("RMSE:", mean_squared_error(y_val, y_pred, squared=False))
-print("R2 Score:", r2_score(y_val, y_pred))
-
-# Optional: print best parameters
-print("Best Parameters:", random_search.best_params_)
-
-
-# In[ ]:
-
-
 import pickle
+from catboost import CatBoostRegressor
 
-# Example: Save a model or DataFrame
-with open('Model.pkl', 'wb') as file:
-    pickle.dump(your_object, file)
+# Load trained model and preprocessors (mock for now)
+# In production, replace with: pickle.load(open("model.pkl", "rb"))
 
+# --- Login Section ---
+def login():
+    st.title("Login Page")
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+    if st.button("Login"):
+        if username == "Riya" and password == "Riya@123":
+            st.session_state["authenticated"] = True
+        else:
+            st.error("Invalid username or password")
+
+# Session authentication
+if "authenticated" not in st.session_state:
+    st.session_state["authenticated"] = False
+
+if not st.session_state["authenticated"]:
+    login()
+else:
+    
+    # --- Revenue Prediction App ---
+    st.title("Revenue Prediction App")
+    st.header("Enter Feature Values")
+
+
+    st.title("Revenue Prediction App")
+
+    st.header("Enter Feature Values")
+
+    # Input fields for each feature
+    land_class = st.selectbox("Land Class", ["Federal", "Native American"])
+    land_category = st.selectbox("Land Category", ["Onshore", "Offshore","Not Tied to a Lease"])
+    state = st.selectbox("State", ["Texas", "Alaska", "California","Georgia","New York", "New Mexico", "Indiana","Florida","Washington"])  # example states
+    revenue_type = st.selectbox("Royalties", ["Royalty", "Bonus", "Rent","Inspection fees","Civil penalties", "Other revenue"])
+    lease_type = st.selectbox("Mineral Lease Type", ["Limestone", "Gold","Coal", "Silver","Oil & Gas","Sulfur","Gilsonite","Gypsum", "Sodium","Phosphate","Gemstones"])
+    commodity = st.selectbox("Commodity", ["Oil", "Gas", "Coal", "Copper", "Hardrock", "Natural gas liquids", "Gilsonite", "Phosphate", "Oil & gas (pre-production)", "Geothermal"])
+    county = st.selectbox("County", ["Carbon", "Eddy", "Sweet Water","Bannock", "Goshen", "Iron","Cleveland", "Franklin", "Washington", "Chambers"])  # example counties
+    product = st.selectbox("Product", ["Nitrogen", "Oil", "Coal Bed Methane", "Coal", "Gas Plant Products", "Calcium Oxide", "Carbon Dioxide Gas (CO2)"
+                                  ,"Fuel Gas", "Fuel Oil", "Helium"])
+
+    # Collect input in a DataFrame
+    input_data = pd.DataFrame([{
+        "Land Class": land_class,
+        "Land Category": land_category,
+        "State": state,
+        "Revenue Type": revenue_type,
+        "Mineral Lease Type": lease_type,
+        "Commodity": commodity,
+        "County": county,
+        "Product": product
+    }])
+
+    # Dummy prediction function for CatBoostRegressor
+    def dummy_catboost_predict(df):
+        # Define and train a dummy CatBoost model
+        model = CatBoostRegressor(verbose=0)
+    
+    # Save the Trained Model 
+    model.save_model("catboost_model.cbm")
+
+    # Load the Model for Prediction:
+    model = CatBoostRegressor()
+    model.load_model("catboost_model.cbm")
+
+    # Example usage with Streamlit
+    if st.button("Predict Revenue"):
+    prediction = model.predict(input_data)  # input_data must match X's structure
+    st.success(f"Estimated Revenue: ${prediction[0]:,.2f}")
+    
+    st.markdown("""
+    <hr>
+    <small>Developed with ❤️ using Streamlit</small>
+    """, unsafe_allow_html=True)
