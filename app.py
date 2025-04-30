@@ -49,11 +49,11 @@ else:
         "Product": product
     }])
 
-    # Load the model and encoder
-    with open("linear_regression_model_bundle.pkl", "rb") as f:
+    # Load the CatBoost model and metadata
+    with open("catboost_model_bundle.pkl", "rb") as f:
         bundle = pickle.load(f)
-        model = bundle["Model"]
-        selected_features = bundle["cat_features"]
+        model: CatBoostRegressor = bundle["Model"]               # The trained CatBoost model
+        selected_features = bundle["cat_features"]               # The list of categorical features
 
     # Predict and display result
     if st.button("Predict Revenue"):
