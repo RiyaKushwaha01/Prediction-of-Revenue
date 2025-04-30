@@ -53,7 +53,6 @@ else:
     with open("Model.pkl", "rb") as f:
         model = pickle.load(f)
         model: CatBoostRegressor = model["Model"]               # The trained CatBoost model
-        selected_features = model["cat_features"]               # The list of categorical features
 
     # Predict and display result
     if st.button("Predict Revenue"):
