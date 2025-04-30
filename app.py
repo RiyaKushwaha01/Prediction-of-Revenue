@@ -48,10 +48,10 @@ else:
         "Product": product
     }])
 
-    # Load the CatBoost model and metadata
+    # Load the CatBoost model  
     with open("Model.pkl", "rb") as f:
         model = pickle.load(f)
-        model = model["Model"]               # The trained CatBoost model
+        model = Model["model"]               # The trained CatBoost model
 
     # Predict and display result
     if st.button("Predict Revenue"):
