@@ -73,7 +73,7 @@ else:
 
     # Example usage with Streamlit
     if st.button("Predict Revenue"):
-    prediction = model.predict(input_data)  # input_data must match X's structure
+    model.predict(input_data)  # input_data must match X's structure
     st.success(f"Estimated Revenue: ${prediction[0]:,.2f}")
     
     st.markdown("""
