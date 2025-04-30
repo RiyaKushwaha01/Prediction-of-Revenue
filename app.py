@@ -50,11 +50,11 @@ else:
 
     # Load the CatBoost model  
     with open("Model.pkl", "rb") as f:
-        model = pickle.load(f)
+         model = pickle.load(f)
 
     # Predict and display result
     if st.button("Predict Revenue"):
-        prediction = model.predict(input_data)
+        prediction =  model.predict(input_data)
         st.success(f"Estimated Revenue: ${prediction[0]:,.2f}")
 
         st.markdown("""
