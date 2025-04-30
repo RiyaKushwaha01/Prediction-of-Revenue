@@ -2,7 +2,6 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import pickle
-from catboost import CatBoostRegressor
 
 # --- Login Section ---
 def login():
@@ -52,7 +51,7 @@ else:
     # Load the CatBoost model and metadata
     with open("Model.pkl", "rb") as f:
         model = pickle.load(f)
-        model: CatBoostRegressor = model["Model"]               # The trained CatBoost model
+        model = model["Model"]               # The trained CatBoost model
 
     # Predict and display result
     if st.button("Predict Revenue"):
