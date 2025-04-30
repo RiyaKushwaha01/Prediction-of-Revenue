@@ -50,14 +50,13 @@ else:
     }])
 
     # Load the CatBoost model and metadata
-    with open("catboost_model_bundle.pkl", "rb") as f:
+    with open("Model.pkl", "rb") as f:
         bundle = pickle.load(f)
         model: CatBoostRegressor = bundle["Model"]               # The trained CatBoost model
         selected_features = bundle["cat_features"]               # The list of categorical features
 
     # Predict and display result
     if st.button("Predict Revenue"):
-        input_data = cat_features
         prediction = model.predict(input_data)
         st.success(f"Estimated Revenue: ${prediction[0]:,.2f}")
 
