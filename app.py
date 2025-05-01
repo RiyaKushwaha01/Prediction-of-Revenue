@@ -29,12 +29,12 @@ else:
     # Input fields for each feature
     land_class = st.selectbox("Land Class", ["Federal", "Native American"])
     land_category = st.selectbox("Land Category", ["Onshore", "Offshore", "Not Tied to a Lease"])
-    state = st.selectbox("State", ["Texas", "Alaska", "California", "Georgia", "New York", "New Mexico", "Indiana", "Florida", "Washington"])
+    state = st.selectbox("State", ["Texas","Missouri", "Alaska", "California", "Georgia", "New York", "New Mexico", "Indiana", "Florida", "Washington"])
     revenue_type = st.selectbox("Royalties", ["Royalty", "Bonus", "Rent", "Inspection fees", "Civil penalties", "Other revenue"])
-    lease_type = st.selectbox("Mineral Lease Type", ["Limestone", "Gold", "Coal", "Silver", "Oil & Gas", "Sulfur", "Gilsonite", "Gypsum", "Sodium", "Phosphate", "Gemstones"])
+    lease_type = st.selectbox("Mineral Lease Type", [ "Hardrock","Limestone", "Gold", "Coal", "Silver", "Oil & Gas", "Sulfur", "Gilsonite", "Gypsum", "Sodium", "Phosphate", "Gemstones"])
     commodity = st.selectbox("Commodity", ["Oil", "Gas", "Coal", "Copper", "Hardrock", "Natural gas liquids", "Gilsonite", "Phosphate", "Oil & gas (pre-production)", "Geothermal"])
-    county = st.selectbox("County", ["Carbon", "Eddy", "Sweet Water", "Bannock", "Goshen", "Iron", "Cleveland", "Franklin", "Washington", "Chambers"])
-    product = st.selectbox("Product", ["Nitrogen", "Oil", "Coal Bed Methane", "Coal", "Gas Plant Products", "Calcium Oxide", "Carbon Dioxide Gas (CO2)", "Fuel Gas", "Fuel Oil", "Helium"])
+    county = st.selectbox("County", ["Carbon","Iron", "Eddy", "Sweet Water", "Bannock", "Goshen", "Cleveland", "Franklin", "Washington", "Chambers"])
+    product = st.selectbox("Product", ["Nitrogen", "Copper Concentrate","Oil", "Coal Bed Methane", "Coal", "Gas Plant Products", "Calcium Oxide", "Carbon Dioxide Gas (CO2)", "Fuel Gas", "Fuel Oil", "Helium"])
 
     # Collect input in a DataFrame
     input_data = pd.DataFrame([{
